@@ -1,0 +1,14 @@
+{
+  "modal": {
+    "logout": {
+      "title": "Đăng xuất",
+      "content": "Bạn có chắc chắn muốn đăng xuất?",
+      "confirm": "Đăng xuất",
+      "cancel": "Hủy"
+    }
+  },
+  "sidebar": {
+    "header": "Trang quản trị",
+    "footer": "© 2024 Bản quyền thuộc về Công ty TNHH ABC"
+  }
+}

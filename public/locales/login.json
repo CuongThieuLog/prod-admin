@@ -1,0 +1,17 @@
+{
+  "title": "Đăng nhập",
+  "description": "Đăng nhập vào trang quản trị",
+  "email": "Email",
+  "password": "Mật khẩu",
+  "enter_email": "Nhập email",
+  "enter_password": "Nhập mật khẩu",
+  "submit": "Đăng nhập",
+  "message": {
+    "success": "Đăng nhập thành công",
+    "error": "Đăng nhập thất bại",
+    "error_email": "Email không hợp lệ",
+    "error_password": "Mật khẩu không hợp lệ",
+    "email_required": "Email không được để trống",
+    "password_required": "Mật khẩu không được để trống"
+  }
+}
