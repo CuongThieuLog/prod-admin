@@ -1,3 +1,5 @@
+import { Product } from '@/features/Product'
+
 export default function Page() {
-  return <div>Coming soon</div>
+  return <Product />
 }
