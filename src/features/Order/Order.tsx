@@ -12,10 +12,10 @@ import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { ProductListType, ProductSchema, ProductSearchType, ProductType } from '.'
-import { ButtonCreate, ButtonEdit, ButtonSearch } from './styled'
+import { ProductListType, ProductSchema, ProductSearchType, ProductType } from '../Product'
+import { ButtonCreate, ButtonEdit, ButtonSearch } from '../Product/styled'
 
-const Product = () => {
+const Order = () => {
   const router = useRouter()
 
   const queryClient = new QueryClient()
@@ -80,7 +80,7 @@ const Product = () => {
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
-      const response = await request.get<ProductListType>('/product')
+      const response = await request.get<ProductListType>('/orders')
       return response.data.data
     },
     queryKey: ['products'],
@@ -142,4 +142,4 @@ const Product = () => {
     </>
   )
 }
-export { Product }
+export { Order }

@@ -1,3 +1,5 @@
+import { Order } from '@/features/Order/Order'
+
 export default function Page() {
-  return <div>Coming soon</div>
+  return <Order />
 }

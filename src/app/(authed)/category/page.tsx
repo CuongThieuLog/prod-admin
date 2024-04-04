@@ -1,3 +1,5 @@
+import { Category } from '@/features/category'
+
 export default function Page() {
-  return <div>Cate</div>
+  return <Category />
 }

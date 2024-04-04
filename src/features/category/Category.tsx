@@ -3,7 +3,6 @@
 import { Input } from '@/libs/components'
 import { ReactTable } from '@/libs/components/Table'
 import request from '@/libs/config/axios'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Stack } from '@mui/material'
 import CreateIcon from '@public/assets/svgs/add.svg'
 import EditIcon from '@public/assets/svgs/edit.svg'
@@ -12,17 +11,17 @@ import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { ProductListType, ProductSchema, ProductSearchType, ProductType } from '.'
-import { ButtonCreate, ButtonEdit, ButtonSearch } from './styled'
+import { CategoryListType, CategorySearchType, CategoryType } from '.'
+import { ButtonCreate, ButtonEdit, ButtonSearch } from '../Product/styled'
 
-const Product = () => {
+const Category = () => {
   const router = useRouter()
 
   const queryClient = new QueryClient()
 
-  const { mutate: deleteProduct } = useMutation({
+  const { mutate: deleteCate } = useMutation({
     mutationFn: async (id: string) => {
-      const response = await request.delete(`/product/${id}`)
+      const response = await request.delete(`/category/${id}`)
       return response.data
     },
     onSuccess: () => {
@@ -30,39 +29,27 @@ const Product = () => {
     },
   })
 
-  const columnHelper = createColumnHelper<ProductType>()
+  const columnHelper = createColumnHelper<CategoryType>()
 
   const columns = [
     columnHelper.accessor('_id', {
       header: () => 'ID',
     }),
     columnHelper.accessor('name', {
-      header: () => 'Tên sản phẩm',
-    }),
-    columnHelper.accessor('price', {
-      header: () => 'Giá sản phẩm',
+      header: () => 'Tên danh mục sản phẩm',
     }),
     columnHelper.accessor('description', {
-      header: () => 'Mô tả sản phẩm',
-    }),
-    columnHelper.accessor('image', {
-      header: () => 'Hình ảnh sản phẩm',
-      cell: (info) => <img src={info.row.original.image} alt="product" width={50} height={50} />,
+      header: () => 'Mô tả danh mục sản phẩm',
     }),
     columnHelper.accessor('_id', {
       id: 'action',
       header: '',
       cell: (info) => (
         <Stack direction="row" alignItems="center" spacing={3.5}>
-          <ButtonEdit
-            onClick={() => {
-              deleteProduct(info.getValue())
-            }}
-          >
+          <ButtonEdit onClick={() => deleteCate(info.getValue())}>
             <TrashIcon />
           </ButtonEdit>
-
-          <ButtonEdit onClick={() => router.push(`/product/update/${info.getValue()}`)}>
+          <ButtonEdit onClick={() => router.push(`/category/update/${info.getValue()}`)}>
             <EditIcon />
           </ButtonEdit>
         </Stack>
@@ -70,23 +57,21 @@ const Product = () => {
     }),
   ]
 
-  const { control, handleSubmit, watch } = useForm<ProductSearchType>({
+  const { control, handleSubmit } = useForm<CategorySearchType>({
     defaultValues: {
       name: '',
-      price: '',
     },
-    resolver: zodResolver(ProductSchema),
   })
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
-      const response = await request.get<ProductListType>('/product')
+      const response = await request.get<CategoryListType>('/category')
       return response.data.data
     },
     queryKey: ['products'],
   })
 
-  const onSubmit: SubmitHandler<ProductSearchType> = (data) => {
+  const onSubmit: SubmitHandler<CategorySearchType> = (data) => {
     console.log(data)
   }
 
@@ -96,7 +81,7 @@ const Product = () => {
         <ButtonCreate
           variant="outlined"
           startIcon={<CreateIcon />}
-          onClick={() => router.push('/product/create')}
+          onClick={() => router.push('category/create')}
         >
           Tạo mới
         </ButtonCreate>
@@ -107,21 +92,7 @@ const Product = () => {
           <Input
             control={control}
             name="name"
-            label="Tên sản phẩm"
-            controlProps={{ sx: { label: { fontWeight: 500, marginBottom: 0, fontSize: 12 } } }}
-            sx={{
-              width: 143,
-              '& .MuiOutlinedInput-input': {
-                fontSize: 12,
-                height: 14,
-              },
-            }}
-          />
-
-          <Input
-            control={control}
-            name="price"
-            label="Giá sản phẩm"
+            label="Tên danh mục sản phẩm"
             controlProps={{ sx: { label: { fontWeight: 500, marginBottom: 0, fontSize: 12 } } }}
             sx={{
               width: 143,
@@ -142,4 +113,4 @@ const Product = () => {
     </>
   )
 }
-export { Product }
+export { Category }

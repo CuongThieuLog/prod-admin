@@ -6,29 +6,17 @@ import request from '@/libs/config/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Stack } from '@mui/material'
 import CreateIcon from '@public/assets/svgs/add.svg'
+import DetailIcon from '@public/assets/svgs/detail.svg'
 import EditIcon from '@public/assets/svgs/edit.svg'
-import TrashIcon from '@public/assets/svgs/trash.svg'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { ProductListType, ProductSchema, ProductSearchType, ProductType } from '.'
-import { ButtonCreate, ButtonEdit, ButtonSearch } from './styled'
+import { ButtonCreate, ButtonDetail, ButtonEdit, ButtonSearch } from '../Product/styled'
 
-const Product = () => {
+const User = () => {
   const router = useRouter()
-
-  const queryClient = new QueryClient()
-
-  const { mutate: deleteProduct } = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await request.delete(`/product/${id}`)
-      return response.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries()
-    },
-  })
 
   const columnHelper = createColumnHelper<ProductType>()
 
@@ -54,15 +42,11 @@ const Product = () => {
       header: '',
       cell: (info) => (
         <Stack direction="row" alignItems="center" spacing={3.5}>
-          <ButtonEdit
-            onClick={() => {
-              deleteProduct(info.getValue())
-            }}
-          >
-            <TrashIcon />
-          </ButtonEdit>
+          <ButtonDetail onClick={() => router.push(`/product/detail/${info.getValue()}`)}>
+            <DetailIcon />
+          </ButtonDetail>
 
-          <ButtonEdit onClick={() => router.push(`/product/update/${info.getValue()}`)}>
+          <ButtonEdit onClick={() => router.push(`/product/edit/${info.getValue()}`)}>
             <EditIcon />
           </ButtonEdit>
         </Stack>
@@ -80,7 +64,7 @@ const Product = () => {
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
-      const response = await request.get<ProductListType>('/product')
+      const response = await request.get<ProductListType>('/users')
       return response.data.data
     },
     queryKey: ['products'],
@@ -96,7 +80,7 @@ const Product = () => {
         <ButtonCreate
           variant="outlined"
           startIcon={<CreateIcon />}
-          onClick={() => router.push('/product/create')}
+          onClick={() => router.push('create')}
         >
           Tạo mới
         </ButtonCreate>
@@ -142,4 +126,4 @@ const Product = () => {
     </>
   )
 }
-export { Product }
+export { User }

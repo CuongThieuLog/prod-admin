@@ -24,17 +24,11 @@ export const ProductCreateSchema = z.object({
   description: z.string().min(1, {
     message: 'Mô tả sản phẩm không được để trống',
   }),
-  quantity: z.string().min(1, {
+  quantity: z.number().min(1, {
     message: 'Số lượng sản phẩm không được để trống',
   }),
   image: z.string().min(1, {
     message: 'Hình ảnh sản phẩm không được để trống',
-  }),
-  categoryId: z.string().min(1, {
-    message: 'Danh mục sản phẩm không được để trống',
-  }),
-  cost: z.string().min(1, {
-    message: 'Giá nhập sản phẩm không được để trống',
   }),
 })
 
@@ -52,7 +46,3 @@ export type ProductListType = {
 
 export type ProductCreateType = z.infer<typeof ProductCreateSchema>
 export type ProductUpdateType = z.infer<typeof ProductUpdateSchema>
-
-export type ProductDetailType = {
-  data: ProductCreateType
-}

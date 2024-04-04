@@ -24,7 +24,7 @@ const ListItemButton: React.FC<ListItemButtonType> = ({ menu }) => {
   const pathname = usePathname()
 
   const checkHref = (href: string) => {
-    return pathname === href
+    return pathname.split('/')[1] === href.split('/')[1]
   }
 
   const handleDirection = () => {
