@@ -52,6 +52,11 @@ const Category = () => {
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
+      if (!watch('name')) {
+        const response = await request.get<CategoryListType>('/category')
+        return response.data.data
+      }
+
       const response = await request.get<CategoryListType>('/category', {
         params: {
           name: watch('name'),
