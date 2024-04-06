@@ -78,6 +78,11 @@ const Order = () => {
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
+      if (!watch('name')) {
+        const response = await request.get<ProductListType>('/product')
+        return response.data.data
+      }
+
       const response = await request.get<ProductListType>('/order')
       return response.data.data
     },

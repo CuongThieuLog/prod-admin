@@ -58,6 +58,11 @@ const User = () => {
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
+      if (!watch('name')) {
+        const response = await request.get<UserListType>('/user')
+        return response.data.data
+      }
+
       const response = await request.get<UserListType>('/user', {
         params: {
           name: watch('name'),
