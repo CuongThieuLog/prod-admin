@@ -4,7 +4,7 @@ import { Input, Select } from '@/libs/components'
 import request from '@/libs/config/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Stack } from '@mui/material'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { useParams, useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { CategoryListType } from '../category'
@@ -13,6 +13,7 @@ import { ProductCreateSchema, ProductCreateType, ProductDetailType } from './typ
 const FormProduct = () => {
   const { productId } = useParams()
   const router = useRouter()
+  const queryClient = new QueryClient()
 
   const { data } = useQuery({
     queryKey: ['product', productId],
@@ -39,11 +40,12 @@ const FormProduct = () => {
 
   const { mutate: updateUser } = useMutation({
     mutationFn: async (data: ProductCreateType) => {
-      const response = await request.put(`/user/${productId}`, data)
+      const response = await request.put(`/product/${productId}`, data)
       return response.data
     },
     onSuccess: () => {
-      router.push('/user')
+      queryClient.invalidateQueries()
+      router.push('/product')
     },
   })
 
@@ -53,7 +55,7 @@ const FormProduct = () => {
       return response.data
     },
     onSuccess: () => {
-      router.push('/user')
+      router.push('/product')
     },
   })
 
@@ -84,7 +86,19 @@ const FormProduct = () => {
     <Stack spacing={2} component="form" onSubmit={handleSubmit(onSubmit)} width={500}>
       <Input control={control} name="name" label="Tên sản phẩm" placeholder="Nhập tên sản phẩm" />
 
-      <Input control={control} name="price" label="Giá sản phẩm" placeholder="Nhập giá sản phẩm" />
+      <Input
+        control={control}
+        name="cost"
+        label="Giá nhập sản phẩm"
+        placeholder="Nhập giá nhập sản phẩm nhập vao"
+      />
+
+      <Input
+        control={control}
+        name="price"
+        label="Giá bán sản phẩm"
+        placeholder="Nhập giá sản phẩm"
+      />
 
       <Input
         control={control}
@@ -98,13 +112,6 @@ const FormProduct = () => {
         name="quantity"
         label="Số lượng sản phẩm"
         placeholder="Nhập số lượng sản phẩm"
-      />
-
-      <Input
-        control={control}
-        name="cost"
-        label="Giá nhập sản phẩm"
-        placeholder="Nhập giá nhập sản phẩm"
       />
 
       <Input

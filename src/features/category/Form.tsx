@@ -62,13 +62,18 @@ const FormCategory = () => {
 
   return (
     <Stack spacing={2} component="form" onSubmit={handleSubmit(onSubmit)} width={500}>
-      <Input control={control} name="name" label="Tên sản phẩm" placeholder="Nhập tên sản phẩm" />
+      <Input
+        control={control}
+        name="name"
+        label="Tên danh mục phẩm"
+        placeholder="Nhập tên danh mục sản phẩm"
+      />
 
       <Input
         control={control}
         name="description"
-        label="Mô tả sản phẩm"
-        placeholder="Nhập mô tả sản phẩm"
+        label="Mô tả danh mục sản phẩm"
+        placeholder="Nhập mô tả danh mục sản phẩm"
       />
 
       <Button type="submit" variant="contained">

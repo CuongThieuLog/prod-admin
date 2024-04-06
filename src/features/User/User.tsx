@@ -5,107 +5,87 @@ import { ReactTable } from '@/libs/components/Table'
 import request from '@/libs/config/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Stack } from '@mui/material'
-import CreateIcon from '@public/assets/svgs/add.svg'
-import DetailIcon from '@public/assets/svgs/detail.svg'
-import EditIcon from '@public/assets/svgs/edit.svg'
+// import CreateIcon from '@public/assets/svgs/add.svg'
+// import DetailIcon from '@public/assets/svgs/detail.svg'
+// import EditIcon from '@public/assets/svgs/edit.svg'
 import { useQuery } from '@tanstack/react-query'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { ProductListType, ProductSchema, ProductSearchType, ProductType } from '.'
-import { ButtonCreate, ButtonDetail, ButtonEdit, ButtonSearch } from '../Product/styled'
+import { useForm } from 'react-hook-form'
+import { UserListType, UserSchema, UserSearchType, UserType } from '.'
 
 const User = () => {
   const router = useRouter()
 
-  const columnHelper = createColumnHelper<ProductType>()
+  const columnHelper = createColumnHelper<UserType>()
 
   const columns = [
     columnHelper.accessor('_id', {
       header: () => 'ID',
     }),
-    columnHelper.accessor('name', {
-      header: () => 'Tên sản phẩm',
+    columnHelper.accessor('username', {
+      header: () => 'Tên người dùng',
     }),
-    columnHelper.accessor('price', {
-      header: () => 'Giá sản phẩm',
+    columnHelper.accessor('email', {
+      header: () => 'Email',
     }),
-    columnHelper.accessor('description', {
-      header: () => 'Mô tả sản phẩm',
+    columnHelper.accessor('role', {
+      header: () => 'Vai trò',
     }),
-    columnHelper.accessor('image', {
-      header: () => 'Hình ảnh sản phẩm',
-      cell: (info) => <img src={info.row.original.image} alt="product" width={50} height={50} />,
-    }),
-    columnHelper.accessor('_id', {
-      id: 'action',
-      header: '',
-      cell: (info) => (
-        <Stack direction="row" alignItems="center" spacing={3.5}>
-          <ButtonDetail onClick={() => router.push(`/product/detail/${info.getValue()}`)}>
-            <DetailIcon />
-          </ButtonDetail>
+    // columnHelper.accessor('_id', {
+    //   id: 'action',
+    //   header: '',
+    //   cell: (info) => (
+    //     <Stack direction="row" alignItems="center" spacing={3.5}>
+    //       <ButtonDetail onClick={() => router.push(`/product/detail/${info.getValue()}`)}>
+    //         <DetailIcon />
+    //       </ButtonDetail>
 
-          <ButtonEdit onClick={() => router.push(`/product/edit/${info.getValue()}`)}>
-            <EditIcon />
-          </ButtonEdit>
-        </Stack>
-      ),
-    }),
+    //       <ButtonEdit onClick={() => router.push(`/product/edit/${info.getValue()}`)}>
+    //         <EditIcon />
+    //       </ButtonEdit>
+    //     </Stack>
+    //   ),
+    // }),
   ]
 
-  const { control, handleSubmit, watch } = useForm<ProductSearchType>({
+  const { control, watch } = useForm<UserSearchType>({
     defaultValues: {
       name: '',
-      price: '',
     },
-    resolver: zodResolver(ProductSchema),
+    resolver: zodResolver(UserSchema),
   })
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
-      const response = await request.get<ProductListType>('/users')
+      const response = await request.get<UserListType>('/user', {
+        params: {
+          name: watch('name'),
+        },
+      })
       return response.data.data
     },
-    queryKey: ['products'],
+    queryKey: ['user', watch('name')],
   })
-
-  const onSubmit: SubmitHandler<ProductSearchType> = (data) => {
-    console.log(data)
-  }
 
   return (
     <>
       <Stack direction="row" justifyContent="flex-end" spacing={2} height={34} mb="3px">
-        <ButtonCreate
+        {/* <ButtonCreate
           variant="outlined"
           startIcon={<CreateIcon />}
-          onClick={() => router.push('create')}
+          onClick={() => router.push('user/create')}
         >
           Tạo mới
-        </ButtonCreate>
+        </ButtonCreate> */}
       </Stack>
 
-      <Stack direction="row" spacing={4} component="form" mb={4} onSubmit={handleSubmit(onSubmit)}>
+      <Stack direction="row" spacing={4} component="form" mb={4}>
         <Stack direction="row" spacing={2}>
           <Input
             control={control}
             name="name"
-            label="Tên sản phẩm"
-            controlProps={{ sx: { label: { fontWeight: 500, marginBottom: 0, fontSize: 12 } } }}
-            sx={{
-              width: 143,
-              '& .MuiOutlinedInput-input': {
-                fontSize: 12,
-                height: 14,
-              },
-            }}
-          />
-
-          <Input
-            control={control}
-            name="price"
-            label="Giá sản phẩm"
+            label="Tên người dùng"
             controlProps={{ sx: { label: { fontWeight: 500, marginBottom: 0, fontSize: 12 } } }}
             sx={{
               width: 143,
@@ -116,10 +96,6 @@ const User = () => {
             }}
           />
         </Stack>
-
-        <ButtonSearch type="submit" variant="contained">
-          Tìm kiếm
-        </ButtonSearch>
       </Stack>
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />

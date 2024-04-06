@@ -58,7 +58,7 @@ function ReactTable<T extends RowData>(
   if (data.length === 0)
     return (
       <Stack direction="row" alignItems="center" justifyContent="center" height="60vh">
-        <Typography>データなし</Typography>
+        <Typography>Không có dữ liệu</Typography>
       </Stack>
     )
 

@@ -5,15 +5,14 @@ import { ReactTable } from '@/libs/components/Table'
 import request from '@/libs/config/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Stack } from '@mui/material'
-import CreateIcon from '@public/assets/svgs/add.svg'
 import EditIcon from '@public/assets/svgs/edit.svg'
 import TrashIcon from '@public/assets/svgs/trash.svg'
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { ProductListType, ProductSchema, ProductSearchType, ProductType } from '../Product'
-import { ButtonCreate, ButtonEdit, ButtonSearch } from '../Product/styled'
+import { ButtonEdit } from '../Product/styled'
 
 const Order = () => {
   const router = useRouter()
@@ -73,55 +72,36 @@ const Order = () => {
   const { control, handleSubmit, watch } = useForm<ProductSearchType>({
     defaultValues: {
       name: '',
-      price: '',
     },
     resolver: zodResolver(ProductSchema),
   })
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
-      const response = await request.get<ProductListType>('/orders')
+      const response = await request.get<ProductListType>('/order')
       return response.data.data
     },
-    queryKey: ['products'],
+    queryKey: ['order', watch('name')],
   })
-
-  const onSubmit: SubmitHandler<ProductSearchType> = (data) => {
-    console.log(data)
-  }
 
   return (
     <>
       <Stack direction="row" justifyContent="flex-end" spacing={2} height={34} mb="3px">
-        <ButtonCreate
+        {/* <ButtonCreate
           variant="outlined"
           startIcon={<CreateIcon />}
-          onClick={() => router.push('/product/create')}
+          onClick={() => router.push('/order/create')}
         >
           Tạo mới
-        </ButtonCreate>
+        </ButtonCreate> */}
       </Stack>
 
-      <Stack direction="row" spacing={4} component="form" mb={4} onSubmit={handleSubmit(onSubmit)}>
+      <Stack direction="row" spacing={4} component="form" mb={4}>
         <Stack direction="row" spacing={2}>
           <Input
             control={control}
             name="name"
-            label="Tên sản phẩm"
-            controlProps={{ sx: { label: { fontWeight: 500, marginBottom: 0, fontSize: 12 } } }}
-            sx={{
-              width: 143,
-              '& .MuiOutlinedInput-input': {
-                fontSize: 12,
-                height: 14,
-              },
-            }}
-          />
-
-          <Input
-            control={control}
-            name="price"
-            label="Giá sản phẩm"
+            label="Tên đơn hàng"
             controlProps={{ sx: { label: { fontWeight: 500, marginBottom: 0, fontSize: 12 } } }}
             sx={{
               width: 143,
@@ -132,10 +112,6 @@ const Order = () => {
             }}
           />
         </Stack>
-
-        <ButtonSearch type="submit" variant="contained">
-          Tìm kiếm
-        </ButtonSearch>
       </Stack>
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />

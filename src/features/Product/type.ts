@@ -4,13 +4,13 @@ export type ProductType = {
   _id: string
   name: string
   price: number
+  cost: number
   description: string
   quantity: number
   image: string
 }
 
 export const ProductSchema = z.object({
-  price: z.string().optional().nullable(),
   name: z.string().optional().nullable(),
 })
 

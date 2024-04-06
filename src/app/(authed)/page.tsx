@@ -1,3 +1,5 @@
+import { Dashboard } from '@/features/Dashborad'
+
 export default function Home() {
-  return <div>Coming soon</div>
+  return <Dashboard />
 }

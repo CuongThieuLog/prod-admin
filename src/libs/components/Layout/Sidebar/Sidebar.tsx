@@ -1,8 +1,8 @@
 'use client'
 
-import { trueGrey } from '@/libs/config/theme/colors'
 import { useAuth } from '@/libs/context'
 import { Box, IconButton, List, Stack, Typography } from '@mui/material'
+import { red } from '@mui/material/colors'
 import LogoutIcon from '@public/assets/svgs/logout.svg'
 import { commonText } from '@public/locales'
 import { useState } from 'react'
@@ -59,7 +59,7 @@ const Sidebar = () => {
           height={151}
           alignItems="center"
           position="absolute"
-          bgcolor={trueGrey[500]}
+          bgcolor={red[500]}
           justifyContent="center"
         >
           <Stack direction="row">

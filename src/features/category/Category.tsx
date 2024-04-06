@@ -5,30 +5,17 @@ import { ReactTable } from '@/libs/components/Table'
 import request from '@/libs/config/axios'
 import { Stack } from '@mui/material'
 import CreateIcon from '@public/assets/svgs/add.svg'
+import DetailIcon from '@public/assets/svgs/detail.svg'
 import EditIcon from '@public/assets/svgs/edit.svg'
-import TrashIcon from '@public/assets/svgs/trash.svg'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { CategoryListType, CategorySearchType, CategoryType } from '.'
-import { ButtonCreate, ButtonEdit, ButtonSearch } from '../Product/styled'
+import { ButtonCreate, ButtonEdit } from '../Product/styled'
 
 const Category = () => {
   const router = useRouter()
-
-  const queryClient = new QueryClient()
-
-  const { mutate: deleteCate } = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await request.delete(`/category/${id}`)
-      return response.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries()
-    },
-  })
-
   const columnHelper = createColumnHelper<CategoryType>()
 
   const columns = [
@@ -46,8 +33,8 @@ const Category = () => {
       header: '',
       cell: (info) => (
         <Stack direction="row" alignItems="center" spacing={3.5}>
-          <ButtonEdit onClick={() => deleteCate(info.getValue())}>
-            <TrashIcon />
+          <ButtonEdit onClick={() => router.push(`/category/detail/${info.getValue()}`)}>
+            <DetailIcon />
           </ButtonEdit>
           <ButtonEdit onClick={() => router.push(`/category/update/${info.getValue()}`)}>
             <EditIcon />
@@ -57,7 +44,7 @@ const Category = () => {
     }),
   ]
 
-  const { control, handleSubmit } = useForm<CategorySearchType>({
+  const { control, watch } = useForm<CategorySearchType>({
     defaultValues: {
       name: '',
     },
@@ -65,15 +52,15 @@ const Category = () => {
 
   const { data, isLoading } = useQuery({
     queryFn: async () => {
-      const response = await request.get<CategoryListType>('/category')
+      const response = await request.get<CategoryListType>('/category', {
+        params: {
+          name: watch('name'),
+        },
+      })
       return response.data.data
     },
-    queryKey: ['products'],
+    queryKey: ['category', watch('name')],
   })
-
-  const onSubmit: SubmitHandler<CategorySearchType> = (data) => {
-    console.log(data)
-  }
 
   return (
     <>
@@ -87,7 +74,7 @@ const Category = () => {
         </ButtonCreate>
       </Stack>
 
-      <Stack direction="row" spacing={4} component="form" mb={4} onSubmit={handleSubmit(onSubmit)}>
+      <Stack direction="row" spacing={4} component="form" mb={4}>
         <Stack direction="row" spacing={2}>
           <Input
             control={control}
@@ -103,10 +90,6 @@ const Category = () => {
             }}
           />
         </Stack>
-
-        <ButtonSearch type="submit" variant="contained">
-          Tìm kiếm
-        </ButtonSearch>
       </Stack>
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />

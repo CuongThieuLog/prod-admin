@@ -1,9 +1,8 @@
 'use client'
 
 import { AlertTitle, Typography } from '@mui/material'
-import checked from '@public/assets/svgs/checked.svg'
-import info from '@public/assets/svgs/info.svg'
-import Image from 'next/image'
+import CheckedIcon from '@public/assets/svgs/checked.svg'
+import InfoIcon from '@public/assets/svgs/info.svg'
 import {
   CustomContentProps,
   SnackbarContent,
@@ -51,8 +50,8 @@ export const SnackbarCustom = forwardRef<HTMLDivElement, CustomSnackbarProps>(
       <SnackbarContent ref={ref} role="alert" {...other}>
         <Alert
           iconMapping={{
-            success: <Image src={checked} alt="success icon" />,
-            error: <Image src={info} alt="error icon" />,
+            success: <CheckedIcon />,
+            error: <InfoIcon />,
           }}
           onClose={onClose}
           severity={other.variant}
