@@ -10,32 +10,89 @@ export type ProductType = {
   image: string
 }
 
+export type ProductDTType = {
+  _id: string
+  name: string
+  price: number
+  cost: number
+  description: string
+  quantity: number
+  image: string
+}
+
+export type ProductBaseType = {
+  _id: string
+  products: {
+    _id: string
+    price: number
+    quantity: number
+    product: {
+      _id: string
+      name: string
+      price: number
+      cost: number
+      description: string
+      quantity: number
+      image: string
+    }
+  }[]
+  user: string
+  total: number
+  shippingAddress: string
+  status: string
+}
+
+export type OrderDetailType = {
+  order: ProductBaseType
+}
+
 export const ProductSchema = z.object({
   name: z.string().optional().nullable(),
 })
 
 export const ProductCreateSchema = z.object({
-  price: z.string().min(1, {
-    message: 'Giá sản phẩm không được để trống',
-  }),
+  price: z
+    .string()
+    .min(1, {
+      message: 'Giá sản phẩm không được để trống',
+    })
+    .or(
+      z.number().min(1, {
+        message: 'Giá sản phẩm không được để trống',
+      }),
+    ),
   name: z.string().min(1, {
     message: 'Tên sản phẩm không được để trống',
   }),
   description: z.string().min(1, {
     message: 'Mô tả sản phẩm không được để trống',
   }),
-  quantity: z.string().min(1, {
-    message: 'Số lượng sản phẩm không được để trống',
-  }),
+  quantity: z
+    .string()
+    .min(1, {
+      message: 'Số lượng sản phẩm không được để trống',
+    })
+    .or(
+      z.number().min(1, {
+        message: 'Số lượng sản phẩm không được để trống',
+      }),
+    ),
   image: z.string().min(1, {
     message: 'Hình ảnh sản phẩm không được để trống',
   }),
   categoryId: z.string().min(1, {
     message: 'Danh mục sản phẩm không được để trống',
   }),
-  cost: z.string().min(1, {
-    message: 'Giá nhập sản phẩm không được để trống',
-  }),
+  cost: z
+    .string()
+    .min(1, {
+      message: 'Giá nhập sản phẩm không được để trống',
+    })
+    .or(
+      z.number().min(1, {
+        message: 'Giá nhập sản phẩm không được để trống',
+      }),
+    ),
 })
 
 export const ProductUpdateSchema = z
@@ -48,6 +105,10 @@ export type ProductSearchType = z.infer<typeof ProductSchema>
 
 export type ProductListType = {
   data: ProductType[]
+}
+
+export type OrderListType = {
+  data: ProductBaseType[]
 }
 
 export type ProductCreateType = z.infer<typeof ProductCreateSchema>

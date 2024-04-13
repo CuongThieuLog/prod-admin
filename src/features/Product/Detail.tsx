@@ -8,6 +8,7 @@ import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { useParams, useRouter } from 'next/navigation'
 import { enqueueSnackbar } from 'notistack'
 import { useState } from 'react'
+import { CategoryDetailType } from '../category'
 import { ProductDetailType } from './type'
 
 const ProductDetail = () => {
@@ -22,6 +23,15 @@ const ProductDetail = () => {
       return data.data
     },
     enabled: !!productId,
+  })
+
+  const { data: categoryDetail } = useQuery({
+    queryKey: ['category', data?.categoryId],
+    queryFn: async () => {
+      const response = await request.get<CategoryDetailType>(`/category/${data?.categoryId}`)
+      return response.data.data
+    },
+    enabled: !!data?.categoryId,
   })
 
   const [openModal, setOpenModal] = useState(false)
@@ -54,16 +64,20 @@ const ProductDetail = () => {
       value: data?.description,
     },
     {
+      title: 'Giá nhập',
+      value: data?.cost,
+    },
+    {
       title: 'Giá',
       value: data?.price,
     },
     {
       title: 'Hình ảnh',
-      value: <img src={data?.image} alt="product" width={50} height={50} />,
+      value: <img src={data?.image} alt="product" width={100} height={100} />,
     },
     {
       title: 'Danh mục',
-      value: data?.categoryId,
+      value: categoryDetail?.name,
     },
   ]
 

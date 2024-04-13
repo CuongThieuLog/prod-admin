@@ -5,71 +5,76 @@ import { ReactTable } from '@/libs/components/Table'
 import request from '@/libs/config/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Stack } from '@mui/material'
-import EditIcon from '@public/assets/svgs/edit.svg'
-import TrashIcon from '@public/assets/svgs/trash.svg'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import DetailIcon from '@public/assets/svgs/detail.svg'
+import { useQuery } from '@tanstack/react-query'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { ProductListType, ProductSchema, ProductSearchType, ProductType } from '../Product'
+import { OrderListType, ProductBaseType, ProductSchema, ProductSearchType } from '../Product'
 import { ButtonEdit } from '../Product/styled'
+import { STATUS_COLOR, STATUS_OPTIONS } from './Detail'
 
 const Order = () => {
   const router = useRouter()
 
-  const queryClient = new QueryClient()
+  const columnHelper = createColumnHelper<ProductBaseType>()
 
-  const { mutate: deleteProduct } = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await request.delete(`/product/${id}`)
-      return response.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries()
-    },
-  })
+  const mapperStatus = (
+    status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELED',
+  ) => {
+    const label = STATUS_OPTIONS.find((item) => item.value === status)?.label
+    const color = STATUS_COLOR[status]
 
-  const columnHelper = createColumnHelper<ProductType>()
+    return { label, color }
+  }
 
   const columns = [
     columnHelper.accessor('_id', {
       header: () => 'ID',
     }),
-    columnHelper.accessor('name', {
-      header: () => 'Tên sản phẩm',
+    columnHelper.accessor('status', {
+      header: () => 'Trạng thái',
+      cell: (info) => {
+        const status = info.row.original.status
+        const { label, color } = mapperStatus(
+          status as 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELED',
+        )
+        return (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <span
+              style={{
+                padding: '4px 8px',
+                borderRadius: 4,
+                color: 'white',
+                backgroundColor: color,
+              }}
+            >
+              {label}
+            </span>
+          </Stack>
+        )
+      },
     }),
-    columnHelper.accessor('price', {
-      header: () => 'Giá sản phẩm',
+    columnHelper.accessor('shippingAddress', {
+      header: () => 'Địa chỉ giao hàng',
     }),
-    columnHelper.accessor('description', {
-      header: () => 'Mô tả sản phẩm',
-    }),
-    columnHelper.accessor('image', {
-      header: () => 'Hình ảnh sản phẩm',
-      cell: (info) => <img src={info.row.original.image} alt="product" width={50} height={50} />,
+    columnHelper.accessor('total', {
+      header: () => 'Tổng tiền',
     }),
     columnHelper.accessor('_id', {
       id: 'action',
       header: '',
       cell: (info) => (
         <Stack direction="row" alignItems="center" spacing={3.5}>
-          <ButtonEdit
-            onClick={() => {
-              deleteProduct(info.getValue())
-            }}
-          >
-            <TrashIcon />
-          </ButtonEdit>
-
-          <ButtonEdit onClick={() => router.push(`/product/update/${info.getValue()}`)}>
-            <EditIcon />
+          <ButtonEdit onClick={() => router.push(`/order/${info.getValue()}`)}>
+            <DetailIcon />
           </ButtonEdit>
         </Stack>
       ),
     }),
   ]
 
-  const { control, handleSubmit, watch } = useForm<ProductSearchType>({
+  const { control, watch } = useForm<ProductSearchType>({
     defaultValues: {
       name: '',
     },
@@ -79,11 +84,11 @@ const Order = () => {
   const { data, isLoading } = useQuery({
     queryFn: async () => {
       if (!watch('name')) {
-        const response = await request.get<ProductListType>('/product')
+        const response = await request.get<OrderListType>('/order')
         return response.data.data
       }
 
-      const response = await request.get<ProductListType>('/order')
+      const response = await request.get<OrderListType>('/order')
       return response.data.data
     },
     queryKey: ['order', watch('name')],
@@ -91,16 +96,6 @@ const Order = () => {
 
   return (
     <>
-      <Stack direction="row" justifyContent="flex-end" spacing={2} height={34} mb="3px">
-        {/* <ButtonCreate
-          variant="outlined"
-          startIcon={<CreateIcon />}
-          onClick={() => router.push('/order/create')}
-        >
-          Tạo mới
-        </ButtonCreate> */}
-      </Stack>
-
       <Stack direction="row" spacing={4} component="form" mb={4}>
         <Stack direction="row" spacing={2}>
           <Input

@@ -41,7 +41,15 @@ const Product = () => {
     }),
     columnHelper.accessor('image', {
       header: () => 'Hình ảnh sản phẩm',
-      cell: (info) => <img src={info.row.original.image} alt="product" width={50} height={50} />,
+      cell: (info) => (
+        <img
+          src={info.row.original.image}
+          alt="product"
+          width={100}
+          height={100}
+          style={{ objectFit: 'contain' }}
+        />
+      ),
     }),
     columnHelper.accessor('_id', {
       id: 'action',

@@ -50,13 +50,13 @@ const Login = () => {
 
   return (
     <>
-      <Stack direction="row" justifyContent="center" pt={{ xs: 2, sm: 10 }}>
+      <Stack direction="row" justifyContent="center" width="100%" height="100vh">
         <Stack
           sx={{
             width: { xs: '100%', sm: 450 },
             height: '100%',
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'center',
           }}
         >
           <Stack alignItems="center" mb={4}>

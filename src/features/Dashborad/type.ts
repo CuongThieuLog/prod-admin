@@ -1,7 +1,7 @@
 export type ProfitType = {
-  totalRevenue: number
+  totalProfit: number
 }
 
 export type IncomeType = {
-  totalProfit: number
+  totalIncome: number
 }

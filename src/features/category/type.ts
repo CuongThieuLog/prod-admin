@@ -3,7 +3,6 @@ import { z } from 'zod'
 export type CategoryType = {
   _id: string
   name: string
-  description: string
 }
 
 export type CategoryListType = {
@@ -13,9 +12,6 @@ export type CategoryListType = {
 export const CategoryCreateSchema = z.object({
   name: z.string().min(1, {
     message: 'Tên danh mục sản phẩm không được để trống',
-  }),
-  description: z.string().min(1, {
-    message: 'Mô tả danh mục sản phẩm không được để trống',
   }),
 })
 

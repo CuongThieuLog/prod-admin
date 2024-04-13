@@ -49,10 +49,6 @@ const CategoryDetail = () => {
       title: 'Tên danh mục sản phẩm',
       value: data?.name,
     },
-    {
-      title: 'Mô tả',
-      value: data?.description,
-    },
   ]
 
   return (

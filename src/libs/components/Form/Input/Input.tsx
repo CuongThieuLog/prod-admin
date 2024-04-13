@@ -56,6 +56,7 @@ const InputStyled = styled(OutlinedInput)(({ theme }) => ({
   color: theme.palette.common.black,
   fontWeight: 400,
   gap: 8,
+  height: 40,
   '& .MuiOutlinedInput-input': {
     padding: theme.spacing(1, 1.5),
     fontSize: 15,

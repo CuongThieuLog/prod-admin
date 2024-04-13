@@ -45,7 +45,6 @@ const FormCategory = () => {
   const { handleSubmit, control } = useForm<CategoryCreateType>({
     defaultValues: {
       name: '',
-      description: '',
     },
     values: data,
     resolver: zodResolver(CategoryCreateSchema),
@@ -67,13 +66,6 @@ const FormCategory = () => {
         name="name"
         label="Tên danh mục phẩm"
         placeholder="Nhập tên danh mục sản phẩm"
-      />
-
-      <Input
-        control={control}
-        name="description"
-        label="Mô tả danh mục sản phẩm"
-        placeholder="Nhập mô tả danh mục sản phẩm"
       />
 
       <Button type="submit" variant="contained">

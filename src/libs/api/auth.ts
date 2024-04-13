@@ -16,7 +16,7 @@ export const login = async ({ email, password }: LoginInputType) => {
 
 export const getMe = async () => {
   try {
-    const res = await request.get<GetMeResponseType>('/user/me')
+    const res = await request.get<GetMeResponseType>('/user-me')
 
     return res.data
   } catch (err) {
@@ -27,6 +27,16 @@ export const getMe = async () => {
 export const logout = async () => {
   try {
     await request.post('/logout')
+  } catch (error) {
+    throw error
+  }
+}
+
+export const registerUser = async (data: any) => {
+  try {
+    const res = await request.post('/register', data)
+
+    return res.data
   } catch (error) {
     throw error
   }

@@ -25,9 +25,6 @@ const Category = () => {
     columnHelper.accessor('name', {
       header: () => 'Tên danh mục sản phẩm',
     }),
-    columnHelper.accessor('description', {
-      header: () => 'Mô tả danh mục sản phẩm',
-    }),
     columnHelper.accessor('_id', {
       id: 'action',
       header: '',

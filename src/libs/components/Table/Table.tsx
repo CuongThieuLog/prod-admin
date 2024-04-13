@@ -81,7 +81,13 @@ function ReactTable<T extends RowData>(
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableCell key={header.id}>
-                  <Typography variant="caption" fontWeight={700} width={100} textAlign="center">
+                  <Typography
+                    variant="caption"
+                    fontWeight={700}
+                    width={100}
+                    textAlign="center"
+                    color="black"
+                  >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </Typography>
                 </TableCell>

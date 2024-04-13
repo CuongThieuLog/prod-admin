@@ -9,7 +9,7 @@ const Dashboard = () => {
   const { data: income } = useQuery({
     queryKey: ['income'],
     queryFn: async () => {
-      const response = await request.get<IncomeType>('/order/income')
+      const response = await request.get<IncomeType>('/order/income/DELIVERED')
       return response.data
     },
   })
@@ -17,7 +17,7 @@ const Dashboard = () => {
   const { data: profit } = useQuery({
     queryKey: ['profit'],
     queryFn: async () => {
-      const response = await request.get<ProfitType>('/order/profit')
+      const response = await request.get<ProfitType>('/order/profit/DELIVERED')
       return response.data
     },
   })
@@ -44,7 +44,7 @@ const Dashboard = () => {
           <Typography textAlign="center">Doanh thu</Typography>
 
           <Typography textAlign="center" variant="subtitle1">
-            {income?.totalProfit}
+            {profit?.totalProfit}
           </Typography>
         </Stack>
 
@@ -63,7 +63,7 @@ const Dashboard = () => {
           <Typography textAlign="center">Lợi nhuận</Typography>
 
           <Typography textAlign="center" variant="subtitle1">
-            {profit?.totalRevenue}
+            {income?.totalIncome}
           </Typography>
         </Stack>
       </Stack>
